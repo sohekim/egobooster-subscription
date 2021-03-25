@@ -66,11 +66,14 @@ public class MailService {
   }
 
   public String findTodayEgoBooster() {
+
+    Integer boosterNum = findBoosterNum();
+
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     HttpEntity request = new HttpEntity(headers);
-    String boosterURL = url + "/api/v1/boosters/random";
+    String boosterURL = url + "/api/v1/boosters/" + boosterNum;
     ResponseEntity<BoosterDto> response = restTemplate.exchange(
         boosterURL,
         HttpMethod.GET,
@@ -86,6 +89,53 @@ public class MailService {
       System.out.println("Booster Request Failed");
       System.out.println(response.getStatusCode());
       return "";
+    }
+  }
+
+  public void incrementBatch() {
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    HttpEntity request = new HttpEntity(headers);
+    String boosterURL = url + "/api/v1/batch/increment";
+    ResponseEntity<Object> response = restTemplate.exchange(
+        boosterURL,
+        HttpMethod.PUT,
+        request,
+        Object.class,
+        1
+    );
+    if (response.getStatusCode() == HttpStatus.OK) {
+      System.out.println("increment Request Successful.");
+
+    } else {
+      log.info("Booster Request Failed");
+    }
+  }
+
+
+  public Integer findBoosterNum() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    HttpEntity request = new HttpEntity(headers);
+    String boosterURL = url + "/api/v1/batch/count";
+    ResponseEntity<Integer> response = restTemplate.exchange(
+        boosterURL,
+        HttpMethod.GET,
+        request,
+        Integer.class,
+        1
+    );
+    if (response.getStatusCode() == HttpStatus.OK) {
+      System.out.println("Booster Request Successful.");
+      System.out.println(response.getBody());
+      return response.getBody();
+    } else {
+      System.out.println("Booster Request Failed");
+      System.out.println(response.getStatusCode());
+      return 1;
     }
   }
 

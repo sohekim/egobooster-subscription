@@ -32,6 +32,7 @@ public class MailSubscribers {
         .next(getTodayEgoBooster())
         .next(addEmails())
         .next(sendEmails())
+        .next(incrementBatch())
         .build();
   }
 
@@ -73,6 +74,15 @@ public class MailSubscribers {
     return stepBuilderFactory.get("sendEmails").tasklet(((contribution, chunkContext) -> {
       log.info(">>>>>> sending emails");
       mailService.mailSend(egoBooster, emailList);
+      return RepeatStatus.FINISHED;
+    }
+    )).build();
+  }
+
+  @Bean
+  public Step incrementBatch() {
+    return stepBuilderFactory.get("increment").tasklet(((contribution, chunkContext) -> {
+      mailService.incrementBatch();
       return RepeatStatus.FINISHED;
     }
     )).build();
