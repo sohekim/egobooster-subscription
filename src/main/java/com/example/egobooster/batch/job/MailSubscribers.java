@@ -28,9 +28,11 @@ public class MailSubscribers {
 
   @Bean
   public Job mailSubscriberJob() {
-    return jobBuilderFactory.get("mailSubscribers").start((init())).next(getTodayEgoBooster())
+    return jobBuilderFactory.get("mailSubscribers").start((init()))
+        .next(getTodayEgoBooster())
         .next(addEmails())
-        .next(sendEmails()).build();
+        .next(sendEmails())
+        .build();
   }
 
   @Bean
