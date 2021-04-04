@@ -61,9 +61,6 @@ public class MailSubscribers {
     return stepBuilderFactory.get("addEmails").tasklet(((contribution, chunkContext) -> {
       log.info(">>>>>> adding emails");
       emailList = mailService.findEmails(emailList);
-      for (String email : emailList) {
-        log.info(email);
-      }
       return RepeatStatus.FINISHED;
     }
     )).build();
@@ -82,7 +79,7 @@ public class MailSubscribers {
   @Bean
   public Step incrementBatch() {
     return stepBuilderFactory.get("increment").tasklet(((contribution, chunkContext) -> {
-      mailService.incrementBatch();
+      mailService.setBatch();
       return RepeatStatus.FINISHED;
     }
     )).build();
