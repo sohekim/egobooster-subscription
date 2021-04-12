@@ -3,7 +3,6 @@ package com.example.egobooster.batch.service;
 import com.example.egobooster.batch.common.BoosterDto;
 import com.example.egobooster.batch.common.SubscriptionDto;
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,28 +100,7 @@ public class MailService {
     return booster;
   }
 
-//  public void incrementBatch() {
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setContentType(MediaType.APPLICATION_JSON);
-//    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-//    HttpEntity request = new HttpEntity(headers);
-//    String boosterURL = url + "/api/v1/batch/increment";
-//    ResponseEntity<Object> response = restTemplate.exchange(
-//        boosterURL,
-//        HttpMethod.PUT,
-//        request,
-//        Object.class,
-//        1
-//    );
-//    if (response.getStatusCode() == HttpStatus.OK) {
-//      System.out.println("increment Request Successful.");
-//
-//    } else {
-//      System.out.println("Booster Request Failed");
-//    }
-//  }
-
-  public void setBatch() {
+  public void setBatchNum() {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -149,7 +127,7 @@ public class MailService {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     HttpEntity request = new HttpEntity(headers);
-    String boosterURL = url + "/api/v1/batch/count";
+    String boosterURL = url + "/api/v1/batch";
     ResponseEntity<Integer> response = restTemplate.exchange(
         boosterURL,
         HttpMethod.GET,
@@ -158,11 +136,11 @@ public class MailService {
         1
     );
     if (response.getStatusCode() == HttpStatus.OK) {
-      System.out.println("Booster Request Successful.");
+      System.out.println("Booster Num Found Successful.");
       System.out.println(response.getBody());
       return response.getBody();
     } else {
-      System.out.println("Booster Request Failed");
+      System.out.println("Booster Num Found Failed");
       System.out.println(response.getStatusCode());
       return 1;
     }
@@ -180,7 +158,7 @@ public class MailService {
             + "    \">\n"
             + "        <div class=\"textBox\">\n"
             + "            <div class=\"textBox-preview\">\n"
-            + "                <img src='cid:morningImage' alt=\"\" style=\"width: 200px; margin-top: 7%;\" />\n"
+            + "                <img name =\"booster\" src='cid:morningImage' alt=\"\" style=\"width: 200px; margin-top: 7%;\" />\n"
             + "                <div class=\"textBox-info\" style=\" padding: 10px; background-color: #f2711d; color: white; margin-top: 5%;\">\n"
             + "                    <h2>");
     stringBuilder.append(egoBooster);
@@ -197,30 +175,23 @@ public class MailService {
   }
 
   public void mailSend(String egoBooster, List<String> emailList)
-      throws MessagingException, URISyntaxException {
-//
-//    for (String toAddress : emailList) {
-//      System.out.println(toAddress);
-//    }
+      throws MessagingException {
     MimeMessage mimeMessage = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-    String htmlMsg = "<h3>" + egoBooster + "</h3>";
-    helper.setText(getHTMLText(egoBooster), true); // Use this or above line.
-    helper.setTo("my.egobooster@gmail.com");
-//    URL res = getClass().getClassLoader().getResource("/images/morning.png");
-//    File file = Paths.get(res.toURI()).toFile();
-//    new File("src/main/java/com/example/egobooster/batch/images/morning").toURI()
-//    String absolutePath = file.getAbsolutePath();
+    helper.setText(getHTMLText(egoBooster), true);
     helper.addInline("morningImage",
         new File("src/main/java/com/example/egobooster/batch/images/morning.png"));
     helper.addInline("greenImage",
         new File("src/main/java/com/example/egobooster/batch/images/green.png"));
     helper.addInline("soheeImage",
         new File("src/main/java/com/example/egobooster/batch/images/sohee.png"));
-
     helper.setSubject("Daily Ego Booster");
     helper.setFrom(myAddress);
-    mailSender.send(mimeMessage);
+    for (String toAddress : emailList) {
+      log.info(toAddress);
+      helper.setTo(toAddress);
+      mailSender.send(mimeMessage);
+    }
   }
 
 }

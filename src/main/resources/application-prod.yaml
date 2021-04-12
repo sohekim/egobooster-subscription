@@ -1,0 +1,21 @@
+server:
+  port: 9000
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://egobooster-database.c50mcel7fyxh.us-west-1.rds.amazonaws.com:3306/egobooster
+    username: admin
+    password: Egobooster1!
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: my.egobooster@gmail.com
+    password: wqowxzvgcoaudsbs
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+url: http://50.18.34.15:8080/

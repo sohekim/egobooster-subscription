@@ -51,6 +51,7 @@ public class MailSubscribers {
     return stepBuilderFactory.get("findEgoBooster").tasklet(((contribution, chunkContext) -> {
       log.info(">>>>>> getting today's ego booster");
       egoBooster = mailService.findTodayEgoBooster();
+      log.info(">>>>>> " + egoBooster);
       return RepeatStatus.FINISHED;
     }
     )).build();
@@ -79,7 +80,7 @@ public class MailSubscribers {
   @Bean
   public Step incrementBatch() {
     return stepBuilderFactory.get("increment").tasklet(((contribution, chunkContext) -> {
-      mailService.setBatch();
+      mailService.setBatchNum();
       return RepeatStatus.FINISHED;
     }
     )).build();
