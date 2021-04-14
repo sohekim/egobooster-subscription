@@ -28,7 +28,8 @@ public class MailSubscribers {
 
   @Bean
   public Job mailSubscriberJob() {
-    return jobBuilderFactory.get("mailSubscribers").start((init()))
+    return jobBuilderFactory.get("mailSubscribers")
+        .start(init())
         .next(getTodayEgoBooster())
         .next(addEmails())
         .next(sendEmails())
@@ -38,52 +39,52 @@ public class MailSubscribers {
 
   @Bean
   public Step init() {
-    return stepBuilderFactory.get("init").tasklet(((contribution, chunkContext) -> {
-      log.info(">>>>>> init");
-      emailList = new ArrayList<>();
-      return RepeatStatus.FINISHED;
-    }
-    )).build();
+    return stepBuilderFactory.get("init").tasklet((contribution, chunkContext) -> {
+          log.info(">>>>>> init");
+          emailList = new ArrayList<>();
+          return RepeatStatus.FINISHED;
+        }
+    ).build();
   }
 
   @Bean
   public Step getTodayEgoBooster() {
-    return stepBuilderFactory.get("findEgoBooster").tasklet(((contribution, chunkContext) -> {
-      log.info(">>>>>> getting today's ego booster");
-      egoBooster = mailService.findTodayEgoBooster();
-      log.info(">>>>>> " + egoBooster);
-      return RepeatStatus.FINISHED;
-    }
-    )).build();
+    return stepBuilderFactory.get("findEgoBooster").tasklet((contribution, chunkContext) -> {
+          log.info(">>>>>> getting today's ego booster");
+          egoBooster = mailService.findTodayEgoBooster();
+          log.info(">>>>>> " + egoBooster);
+          return RepeatStatus.FINISHED;
+        }
+    ).build();
   }
 
   @Bean
   public Step addEmails() {
-    return stepBuilderFactory.get("addEmails").tasklet(((contribution, chunkContext) -> {
-      log.info(">>>>>> adding emails");
-      emailList = mailService.findEmails(emailList);
-      return RepeatStatus.FINISHED;
-    }
-    )).build();
+    return stepBuilderFactory.get("addEmails").tasklet((contribution, chunkContext) -> {
+          log.info(">>>>>> adding emails");
+          emailList = mailService.findEmails(emailList);
+          return RepeatStatus.FINISHED;
+        }
+    ).build();
   }
 
   @Bean
   public Step sendEmails() {
-    return stepBuilderFactory.get("sendEmails").tasklet(((contribution, chunkContext) -> {
-      log.info(">>>>>> sending emails");
-      mailService.mailSend(egoBooster, emailList);
-      return RepeatStatus.FINISHED;
-    }
-    )).build();
+    return stepBuilderFactory.get("sendEmails").tasklet((contribution, chunkContext) -> {
+          log.info(">>>>>> sending emails");
+          mailService.mailSend(egoBooster, emailList);
+          return RepeatStatus.FINISHED;
+        }
+    ).build();
   }
 
   @Bean
   public Step incrementBatch() {
-    return stepBuilderFactory.get("increment").tasklet(((contribution, chunkContext) -> {
-      mailService.setBatchNum();
-      return RepeatStatus.FINISHED;
-    }
-    )).build();
+    return stepBuilderFactory.get("increment").tasklet((contribution, chunkContext) -> {
+          mailService.setBatchNum();
+          return RepeatStatus.FINISHED;
+        }
+    ).build();
   }
 
 }
