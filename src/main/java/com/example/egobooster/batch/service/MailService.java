@@ -39,9 +39,12 @@ public class MailService {
   @Value("${url}")
   private String url;
 
+  @Value("${key}")
+  private String key;
+
   private Integer boosterNum;
 
-  public List<String> findEmails(List<String> list) {
+  public List<String> findEmails() {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -69,9 +72,10 @@ public class MailService {
   }
 
   public String findTodayEgoBooster() {
-    boosterNum = findBoosterNum();
-    String booster = "";
 
+    boosterNum = findBoosterNum();
+
+    String booster = "";
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -103,6 +107,7 @@ public class MailService {
   public void setBatchNum() {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("key", key);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     HttpEntity request = new HttpEntity(headers);
     String boosterURL = url + "/api/v1/batch/set?num=" + boosterNum;
@@ -125,6 +130,7 @@ public class MailService {
   public Integer findBoosterNum() {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("key", key);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     HttpEntity request = new HttpEntity(headers);
     String boosterURL = url + "/api/v1/batch";

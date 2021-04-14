@@ -62,7 +62,7 @@ public class MailSubscribers {
   public Step addEmails() {
     return stepBuilderFactory.get("addEmails").tasklet((contribution, chunkContext) -> {
           log.info(">>>>>> adding emails");
-          emailList = mailService.findEmails(emailList);
+          emailList = mailService.findEmails();
           return RepeatStatus.FINISHED;
         }
     ).build();
