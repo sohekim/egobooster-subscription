@@ -2,7 +2,6 @@ package com.example.egobooster.batch.service;
 
 import com.example.egobooster.batch.common.BoosterDto;
 import com.example.egobooster.batch.common.SubscriptionDto;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -185,14 +185,16 @@ public class MailService {
     MimeMessage mimeMessage = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
     helper.setText(getHTMLText(egoBooster), true);
+
     helper.addInline("morningImage",
-        new File("src/main/java/com/example/egobooster/batch/images/morning.png"));
+        new ClassPathResource("/images/morning.png"));
     helper.addInline("greenImage",
-        new File("src/main/java/com/example/egobooster/batch/images/green.png"));
+        new ClassPathResource("/images/green.png"));
     helper.addInline("soheeImage",
-        new File("src/main/java/com/example/egobooster/batch/images/sohee.png"));
+        new ClassPathResource("/images/sohee.png"));
     helper.setSubject("Daily Ego Booster");
     helper.setFrom(myAddress);
+
     for (String toAddress : emailList) {
       log.info(toAddress);
       helper.setTo(toAddress);
