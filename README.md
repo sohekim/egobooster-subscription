@@ -25,8 +25,10 @@
 
 | Framework            | Deployment     | Database    | Others       |
 | -------------------- |----------------| ------------| -------------|
-| Spring Boot Batch    | AWS EC2        | Jenkins     | Google SMTP  |
+| Spring Boot Batch    | Jenkins        | MySQL       | Google SMTP  |
 | Spring Boot Mail     | AWS RDS        |             |              |
+|                      | AWS EC2        |             |              |
+
 
 
 </br>
